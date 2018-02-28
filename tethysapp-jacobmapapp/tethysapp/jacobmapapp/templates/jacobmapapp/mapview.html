@@ -1,0 +1,298 @@
+{% extends "jacobmapapp/base.html" %}
+{% load tethys_gizmos %}
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_content %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>ArcMapJavaScript</title>
+		<link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
+		<link rel="icon" href="https://gm1.ggpht.com/s_gwY7S4cMhM4ULR7E-Y6trkC386VVWjhYJv7_IqiRjGzAUmcJLC3wBAW-iYVKTZN8dMXZvvbNWIsRg_5N_rjb76cYTOZFrPz7FHCvHl6QXioJkT82l1lMYMNy4Zc44Q83drud895zxkhurv8Faj1MaNr7vxRVDzvbGL07cz3ffWZSnSbR4rIabvaisTUWJmqzlqVMEZ6fPLKtKrCV5h--_nGy1OsDwu_ujXbCZQk0dEh34F2d8revYr4F4ykKuDO6ZNB8MsvYHo5o0GoiEEfxH-xT70l3HzQhLFDyYTV03mOcIKj4JF_XaqymJnwq5kKJanck84_02EZGMTFots_gZiToxIgA875Y2ucr0y8CqxhX_6DpfdPVOMsPDfILtFkiUeeitumcPUFpHRk4J1GxvqlYrSIc1GTbes_1QyMmOz3o2Bhcz-8BIVhSesk1A4Mdbhuod-5l1qiUXu1h2IAADvwL7oJ2Fzwm3cG9p35zzB4qiaH__Q0Kj5RvDwHqA9KD05UWnVw1ESuKV-4vPnThx4nSux_52G48aZUl5arzD3EN4zSf00qRMiRGuJt-PHKYgXVdiC56FAjmKlfQYJuJgpPusE8IcYGrGjaRTfAaA9eBluIMdsvOb-9KZxXvasaZ_n39JzbOqNWPkNjhA4P6agRAMvhb_dUS9engiQW0LUokueDd9UkyqXymWc=w1124-h738-l75-ft">
+
+		<script src="https://js.arcgis.com/4.6/"></script>
+
+	</head>
+	<style>
+		body {background-color: white;}
+		h1   {color: white;
+			font-family: optima;
+			font-size: 30px;
+			font-style: normal;
+			font-variant: normal;
+			font-weight: 500;
+			line-height: 26.4px;
+			float: left;
+			}
+		h2   {color: white;
+			font-family: optima;
+			font-size: 20px;
+			font-style: normal;
+			font-variant: normal;
+			font-weight: 500;
+			line-height: 26.4px;
+			}
+		h3   {color: white;
+			font-family: optima;
+			font-size: 20px;
+			font-style: normal;
+			font-variant: normal;
+			font-weight: 500;
+			line-height: 26.4px;
+			}
+		p    {color: black;}
+		table { font-family: optima;
+			font-size: 25px;
+			margin: 0 .6em>;
+			text-align: center;
+			width:100%;
+			color: white;
+			font-weight: 500;
+			font-style: normal;
+			font-variant: normal;
+			line-height: 26.4px;
+			}
+		td, th {
+		    padding: 8px;
+		    text-align: center;
+			}
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 60px;
+			height: 34px;
+		}
+		.switch input {display:none;}
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .4s;
+			transition: .4s;
+			}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+			}
+
+		input:checked + .slider {
+			background-color: #B0B0B0;
+			}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #2196F3;
+			}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(26px);
+			-ms-transform: translateX(26px);
+			transform: translateX(26px);
+			}
+
+		html, body,
+		#viewDiv {
+			padding: 0;
+			margin: 0;
+			height:100%;
+			width: 100%;
+			}
+		#main_header h3{
+			padding-top: 3%;
+			}
+		#main_header div {
+			display: inline-block;
+			width:75%;
+			align:left;
+			text-align: center;
+			/*vertical-align: middle;*/
+			}
+		#main_header {
+			background-color: #64b5f6;
+			/*white-space: nowrap;*/
+			height: 70px;
+			border-bottom-style: solid;
+			/*overflow-x: auto;*/
+			/*overflow-y: hidden;*/
+			}
+		#container{
+			height:90vh;
+			overflow: hidden;
+			}
+		#main_footer {
+			background-color: #64b5f6;
+			/*white-space: nowrap;*/
+			height: 10vh;
+			border-top-style:solid;
+			/*overflow-x: auto;*/
+			/*overflow-y: hidden;*/
+			}
+
+
+	</style>
+
+	<body>
+		<!--Ribbon Information
+			<div id="menu", class="container">
+			<h1>ArcMapJavaScript</h1>
+			<h2>By Jacob Olsen</h2>
+			<h3>2/12/2018</h3>
+			</div>-->
+
+		<div id = "container">
+          <!--Display the ArcMap -->
+			<div id="viewDiv"></div>
+		</div>
+
+		<!--Footer -->
+		<div id = "main_footer">
+			<table>
+			<tr>
+			<th>Utah DEM</th>
+			<th>Speed Limits for Roads</th>
+			<tr>
+			<td>
+			<label class="switch">
+				<input type="checkbox" id="dem" checked>
+				<span class="slider"></span>
+			</label>
+			</td>
+			<td>
+			<label class="switch">
+				<input type="checkbox" id="speedlimit" checked>
+				<span class="slider"></span>
+			</label>
+			</td>
+			</tr>
+			</table>
+
+		</div>
+
+
+		<!--Code for Displaying the ArcMap -->
+  		<script>
+				require([
+			  "esri/Map",
+			  "esri/layers/MapImageLayer",
+			  "esri/layers/FeatureLayer",
+			  "esri/views/MapView",
+			  "dojo/dom",  // require dojo/dom for getting the DOM element
+			  "dojo/on",   // require dojo/on for listening to events on the DOM
+			  "dojo/domReady!"
+			], function(Map, MapImageLayer, FeatureLayer, MapView, dom, on) {
+
+			//Create the Map
+			  var map = new Map({
+				basemap: "streets"
+			  });
+
+			  var utah_dem_layer = new MapImageLayer({url: "http://geoserver2.byu.edu/arcgis/rest/services/Valor/Elevations/MapServer"});
+
+			  //var speedlimitlayer = new MapImageLayer({url: "http://geoserver2.byu.edu/arcgis/rest/services/Valor/MyMapService/MapServer"});
+
+			  map.layers.add(utah_dem_layer);
+			  //map.layers.add(speedlimitlayer);
+
+			  //Create the Map View
+			  var view = new MapView({
+				map: map,
+				container: "viewDiv",
+				zoom: 15,
+				center: [-111.662414, 40.236778] // longitude, latitude
+			  });
+
+			  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			  //The Popup
+			  var popup = { // autocasts as new PopupTemplate()
+				title: "<p>Information about road {Name} in/near {ADDRSYS_L}</p>",
+				content: "<ul><li>The zip code is {ZIPCODE_L}</li>" +
+				  "<li>The speed limit is {SPEED_LMT} mph</li>",
+				fieldInfos: [{
+				  fieldName: "SPEED_LMT",
+				  format: {
+					digitSeparator: true, // Use a comma separator for large numbers
+					places: 0 // Sets the number of decimal places to 0 and rounds up
+				  }
+				}]
+			  };
+
+				// Reference the popupTemplate instance in the
+				// popupTemplate property of FeatureLayer
+			  var featureLayer = new FeatureLayer({
+				url: "http://geoserver2.byu.edu/arcgis/rest/services/Valor/FullRoadshp/FeatureServer/0",
+				outFields: ["*"],
+				popupTemplate: popup
+				});
+				map.add(featureLayer);
+
+			  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// Create a variable referencing the checkbox node for Utah DEM
+			  var demLayerToggle = dom.byId("dem");
+
+				// Listen to the onchange event for the checkbox
+				on(demLayerToggle, "change", function(){
+				// When the checkbox is checked (true), set the layer's visibility to true
+				utah_dem_layer.visible = demLayerToggle.checked;
+				});
+
+				// Create a variable referencing the checkbox node for Utah SpeedLimit
+			  var speedlimiLyrToggle = dom.byId("speedlimit");
+
+				// Listen to the onchange event for the checkbox
+				on(speedlimiLyrToggle, "change", function(){
+				// When the checkbox is checked (true), set the layer's visibility to true
+				featureLayer.visible = speedlimiLyrToggle.checked;
+				});
+			});
+
+		</script>
+	</body>
+
+
+</html>
+
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+  Example Modal
+  <div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h5 class="modal-title" id="help-modal-label">Example Modal</h5>
+        </div>
+        <div class="modal-body">
+          <p>You can add custom buttons to the app header using the <code>header_buttons</code> block. Use anchor/link tags for the button and wrap it in a div with the class <code>header-button</code>. For buttons with the gliphyicons, add the <code>glyphicon-button</code> class as well.</p>
+          <p>Ever have trouble using a modal in a Tethys app? Use the <code>after_app_content</code> block for modal content to allow them to function properly. See: <a href="https://getbootstrap.com/javascript/#modals">Bootstrap Modals</a></p>
+          <p>Add tooltips to any element by adding the <code>data-toggle</code>, <code>data-placement</code>, and <code>title</code> attributes to the button. See: <a href="https://getbootstrap.com/javascript/#tooltips">Bootstrap Tooltips</a></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+{% endblock %}
+
+{% block app_actions %}
+
+{% endblock %}
