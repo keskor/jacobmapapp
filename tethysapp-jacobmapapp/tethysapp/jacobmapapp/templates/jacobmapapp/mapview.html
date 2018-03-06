@@ -269,6 +269,14 @@
 
 {% endblock %}
 
+{% block app_navigation_items %}
+{{block.super}}
+  {% gizmo toggle_switch_DEM %}
+  {% gizmo toggle_switch_road %}
+  {% gizmo date_picker %}
+  {% gizmo distance_slider %}
+{% endblock %}
+
 {# Use the after_app_content block for modals #}
 {% block after_app_content %}
   Example Modal
@@ -290,7 +298,7 @@
         </div>
       </div>
     </div>
-  </div> 
+  </div>
 {% endblock %}
 
 {% block app_actions %}
